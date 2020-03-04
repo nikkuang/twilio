@@ -2,18 +2,20 @@
 
 namespace NotificationChannels\Twilio\Test;
 
-use Mockery;
-use NotificationChannels\Twilio\Twilio;
-use Twilio\Rest\Client as TwilioService;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Events\Dispatcher;
-use Twilio\Rest\Api\V2010\Account\CallList;
+use Illuminate\Notifications\Notification;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use NotificationChannels\Twilio\TwilioConfig;
-use NotificationChannels\Twilio\TwilioChannel;
-use Twilio\Rest\Api\V2010\Account\MessageList;
-use NotificationChannels\Twilio\TwilioSmsMessage;
+use NotificationChannels\Twilio\Test\Notifiable\NotifiableWithAlphanumericSender;
+use NotificationChannels\Twilio\Test\Notifiable\NotifiableWithAttribute;
+use NotificationChannels\Twilio\Twilio;
 use NotificationChannels\Twilio\TwilioCallMessage;
+use NotificationChannels\Twilio\TwilioChannel;
+use NotificationChannels\Twilio\TwilioConfig;
+use NotificationChannels\Twilio\TwilioSmsMessage;
+use Twilio\Rest\Api\V2010\Account\CallList;
+use Twilio\Rest\Api\V2010\Account\MessageList;
+use Twilio\Rest\Client as TwilioService;
 
 class IntegrationTest extends MockeryTestCase
 {
@@ -26,15 +28,15 @@ class IntegrationTest extends MockeryTestCase
     /** @var Dispatcher */
     protected $events;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
-        $this->twilioService = Mockery::mock(TwilioService::class);
+        $this->twilioService           = Mockery::mock(TwilioService::class);
         $this->twilioService->messages = Mockery::mock(MessageList::class);
-        $this->twilioService->calls = Mockery::mock(CallList::class);
+        $this->twilioService->calls    = Mockery::mock(CallList::class);
 
-        $this->events = Mockery::mock(Dispatcher::class);
+        $this->events       = Mockery::mock(Dispatcher::class);
         $this->notification = Mockery::mock(Notification::class);
     }
 

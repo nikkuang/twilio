@@ -2,15 +2,19 @@
 
 namespace NotificationChannels\Twilio\Test;
 
-use Mockery;
-use NotificationChannels\Twilio\Twilio;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Notifications\Events\NotificationFailed;
+use Illuminate\Notifications\Notification;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use NotificationChannels\Twilio\Test\Notifiable\Notifiable;
+use NotificationChannels\Twilio\Test\Notifiable\NotifiableWithAlphanumericSender;
+use NotificationChannels\Twilio\Test\Notifiable\NotifiableWithAttribute;
+use NotificationChannels\Twilio\Test\Notifiable\NotifiableWithMethod;
+use NotificationChannels\Twilio\Twilio;
+use NotificationChannels\Twilio\TwilioCallMessage;
 use NotificationChannels\Twilio\TwilioChannel;
 use NotificationChannels\Twilio\TwilioSmsMessage;
-use NotificationChannels\Twilio\TwilioCallMessage;
-use Illuminate\Notifications\Events\NotificationFailed;
 
 class TwilioChannelTest extends MockeryTestCase
 {
@@ -23,7 +27,7 @@ class TwilioChannelTest extends MockeryTestCase
     /** @var Dispatcher */
     protected $dispatcher;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -125,45 +129,5 @@ class TwilioChannelTest extends MockeryTestCase
             ->with($message, '+33333333333', true);
 
         $this->channel->send($notifiable, $notification);
-    }
-}
-
-class Notifiable
-{
-    public $phone_number = null;
-
-    public function routeNotificationFor()
-    {
-    }
-}
-
-class NotifiableWithMethod
-{
-    public function routeNotificationFor()
-    {
-        return '+1111111111';
-    }
-}
-
-class NotifiableWithAttribute
-{
-    public $phone_number = '+22222222222';
-
-    public function routeNotificationFor()
-    {
-    }
-}
-
-class NotifiableWithAlphanumericSender
-{
-    public $phone_number = '+33333333333';
-
-    public function routeNotificationFor()
-    {
-    }
-
-    public function canReceiveAlphanumericSender()
-    {
-        return true;
     }
 }
